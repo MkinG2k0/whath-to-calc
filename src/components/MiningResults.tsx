@@ -20,6 +20,7 @@ const MiningResults: React.FC<MiningResultsProps> = ({
 	cryptoCurrency,
 	fiatCurrency,
 }) => {
+
 	if (!result) {
 		return null
 	}
@@ -40,17 +41,17 @@ const MiningResults: React.FC<MiningResultsProps> = ({
 			dataIndex: 'month',
 			key: 'month',
 		},
+		{
+			title: 'Сложность',
+			dataIndex: 'difficulty',
+			key: 'difficulty',
+			render: (text: number) => text.toLocaleString('ru-RU'),
+		},
 		// {
-		//   title: "Сложность",
-		//   dataIndex: "difficulty",
-		//   key: "difficulty",
-		//   render: (text: number) => text.toLocaleString("ru-RU"),
-		// },
-		// {
-		//   title: "Изменение сложности",
-		//   dataIndex: "difficultyChange",
-		//   key: "difficultyChange",
-		//   render: (text: number) => `${text} %`,
+		// 	title: 'Изменение сложности',
+		// 	dataIndex: 'difficultyChange',
+		// 	key: 'difficultyChange',
+		// 	render: (text: number) => `${text} %`,
 		// },
 		{
 			title: `Доход ${cryptoCurrency}`,
@@ -73,7 +74,7 @@ const MiningResults: React.FC<MiningResultsProps> = ({
 	]
 
 	return (
-		<div className="flex flex-col gap-2 flex-auto">
+		<div className="flex flex-col gap-2 flex-auto h-full overflow-hidden">
 			<Card
 				title="Заработок на майнинге в текущих показателях"
 				loading={loading}
@@ -125,19 +126,18 @@ const MiningResults: React.FC<MiningResultsProps> = ({
 				</div>
 			</Card>
 
-			<Card
-				title="Заработок на майнинге в перспективе"
-				loading={loading}
-				size="small"
-			>
+			<Card title="Заработок на майнинге в перспективе" loading={loading} size="small">
 				<Table
 					dataSource={result.monthlyProfitForecast.map((item, index) => ({
 						...item,
 						key: index,
 					}))}
 					columns={forecastColumns}
-					scroll={{x: true}}
+					scroll={{y: 'calc(100vh - 310px)'}} // Настрой значение под свой макет
+					size="small"
 					pagination={false}
+					// className={'scroll-antd-table'}
+					style={{flexGrow: 1}} // Занимает всё пространство внутри контейнера
 				/>
 			</Card>
 		</div>
