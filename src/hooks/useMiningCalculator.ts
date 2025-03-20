@@ -65,13 +65,8 @@ export const useMiningCalculator = () => {
 				}
 
 				// Расчет времени окупаемости (в днях)
-				let breakEvenDays = 0
-				if (dailyProfit > 0) {
-					breakEvenDays = params.farmCost / dailyProfit
-				} else {
-					// Если прибыль отрицательная или нулевая, окупаемости нет
-					breakEvenDays = Infinity // или можно использовать -1 как маркер невозможности окупаемости
-				}
+				const breakEvenDays = Math.round(dailyProfit > 0 ? params.farmCost / dailyProfit : Infinity)
+				const breakEvenDaysDirty = Math.round(dailyRewardFiat > 0 ? params.farmCost / dailyRewardFiat : Infinity)
 
 				// Прогноз по месяцам
 				const monthlyForecast = calculateMonthlyForecast(
@@ -100,6 +95,7 @@ export const useMiningCalculator = () => {
 					yearlyRewardFiat,
 					roi,
 					breakEvenDays,
+					breakEvenDaysDirty,
 					monthlyProfitForecast: monthlyForecast,
 				})
 
