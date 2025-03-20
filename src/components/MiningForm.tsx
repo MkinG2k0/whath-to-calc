@@ -3,15 +3,12 @@ import {
 	Form,
 	Select,
 	InputNumber,
-	Switch,
-	DatePicker,
 	Card,
 	Tooltip,
 } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { CryptoCurrency, FiatCurrency, MiningParams } from '../types'
 import { fetchCryptoRates, fetchNetworkInfo } from '../api/cryptoApi'
-import locale from 'antd/es/date-picker/locale/ru_RU'
 import dayjs from 'dayjs'
 
 const {Option} = Select
@@ -223,13 +220,13 @@ const MiningForm: React.FC<MiningFormProps> = ({onParamsChange}) => {
 						<Form.Item label="Криптовалюта" name="cryptoCurrency">
 							<Select onChange={handleCryptoChange} size="small">
 								<Option value="BTC">Bitcoin (BTC)</Option>
-								<Option value="DOGE">Dogecoin (DOGE)</Option>
+								{/*<Option value="DOGE">Dogecoin (DOGE)</Option>*/}
 							</Select>
 						</Form.Item>
 
 						<Form.Item label="Валюта" name="fiatCurrency">
 							<Select onChange={handleFiatChange} size="small">
-								<Option value="USD">USD</Option>
+								{/*<Option value="USD">USD</Option>*/}
 								<Option value="RUB">RUB</Option>
 							</Select>
 						</Form.Item>
@@ -271,19 +268,19 @@ const MiningForm: React.FC<MiningFormProps> = ({onParamsChange}) => {
 							/>
 						</Form.Item>
 
-						<Form.Item
-							label={
-								<span>
-                Награда за блок{' '}
-									<Tooltip title="Текущая награда за найденный блок">
-                  <QuestionCircleOutlined/>
-                </Tooltip>
-              </span>
-							}
-							name="blockReward"
-						>
-							<InputNumber style={{width: '100%'}} min={0} size="small"/>
-						</Form.Item>
+						{/*<Form.Item*/}
+						{/*	label={*/}
+						{/*		<span>*/}
+						{/*    Награда за блок{' '}*/}
+						{/*			<Tooltip title="Текущая награда за найденный блок">*/}
+						{/*      <QuestionCircleOutlined/>*/}
+						{/*    </Tooltip>*/}
+						{/*  </span>*/}
+						{/*	}*/}
+						{/*	name="blockReward"*/}
+						{/*>*/}
+						{/*	<InputNumber style={{width: '100%'}} min={0} size="small"/>*/}
+						{/*</Form.Item>*/}
 
 						<Form.Item
 							label={
@@ -343,24 +340,24 @@ const MiningForm: React.FC<MiningFormProps> = ({onParamsChange}) => {
 							/>
 						</Form.Item>
 
-						<Form.Item
-							label="Учитывать амортизацию"
-							name="includeDepreciation"
-							valuePropName="checked"
-						>
-							<Switch size="small"/>
-						</Form.Item>
+						{/*<Form.Item*/}
+						{/*	label="Учитывать амортизацию"*/}
+						{/*	name="includeDepreciation"*/}
+						{/*	valuePropName="checked"*/}
+						{/*>*/}
+						{/*	<Switch size="small"/>*/}
+						{/*</Form.Item>*/}
 
-						<Form.Item label="Ставка амортизации" name="depreciationRate">
-							<InputNumber
-								style={{width: '100%'}}
-								addonAfter="% (в месяц)"
-								min={0}
-								max={100}
-								step={0.01}
-								size="small"
-							/>
-						</Form.Item>
+						{/*<Form.Item label="Ставка амортизации" name="depreciationRate">*/}
+						{/*	<InputNumber*/}
+						{/*		style={{width: '100%'}}*/}
+						{/*		addonAfter="% (в месяц)"*/}
+						{/*		min={0}*/}
+						{/*		max={100}*/}
+						{/*		step={0.01}*/}
+						{/*		size="small"*/}
+						{/*	/>*/}
+						{/*</Form.Item>*/}
 					</div>
 
 					{/* Блок временных параметров и прогнозов */}
@@ -378,14 +375,14 @@ const MiningForm: React.FC<MiningFormProps> = ({onParamsChange}) => {
 							/>
 						</Form.Item>
 
-						<Form.Item label="Месяц начала работы" name="startDate">
-							<DatePicker
-								style={{width: '100%'}}
-								picker="month"
-								locale={locale}
-								size="small"
-							/>
-						</Form.Item>
+						{/*<Form.Item label="Месяц начала работы" name="startDate">*/}
+						{/*	<DatePicker*/}
+						{/*		style={{width: '100%'}}*/}
+						{/*		picker="month"*/}
+						{/*		locale={locale}*/}
+						{/*		size="small"*/}
+						{/*	/>*/}
+						{/*</Form.Item>*/}
 
 						<Form.Item
 							label="Изменение сложности"

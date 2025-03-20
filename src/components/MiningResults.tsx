@@ -40,11 +40,13 @@ const MiningResults: React.FC<MiningResultsProps> = ({
 			title: 'Месяц',
 			dataIndex: 'month',
 			key: 'month',
+			width: 80,
 		},
 		{
 			title: 'Сложность',
 			dataIndex: 'difficulty',
 			key: 'difficulty',
+			width: 190,
 			render: (text: number) => text.toLocaleString('ru-RU'),
 		},
 		// {
@@ -66,7 +68,7 @@ const MiningResults: React.FC<MiningResultsProps> = ({
 			render: (text: number) => formatFiat(text),
 		},
 		{
-			title: 'ROI',
+			title: 'Окупаемость',
 			dataIndex: 'roi',
 			key: 'roi',
 			render: (text: number) => `${formatFiat(text)} %`,
@@ -80,7 +82,7 @@ const MiningResults: React.FC<MiningResultsProps> = ({
 				loading={loading}
 				size="small"
 			>
-				<div className="flex gap-4">
+				<div className="flex gap-4 flex-wrap">
 					<Statistic
 						title={`Окупаемость`}
 						valueRender={
