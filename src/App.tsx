@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Layout, Typography, Divider } from "antd";
+import React  from "react";
+import { Layout,   } from "antd";
 import MiningForm from "./components/MiningForm";
 import MiningResults from "./components/MiningResults";
 import { MiningParams } from "./types";
@@ -7,10 +7,9 @@ import { useMiningCalculator } from "./hooks/useMiningCalculator";
 import "./App.css";
 
 const { Header, Content, Footer } = Layout;
-const { Title } = Typography;
 
 const App: React.FC = () => {
-  const { params, results, error, setParams, blockTimeEstimates, loading } =
+  const { params, results, error, setParams,  loading } =
     useMiningCalculator();
 
   const handleParamsChange = (newParams: MiningParams) => {
@@ -40,7 +39,6 @@ const App: React.FC = () => {
           {params && (
             <MiningResults
               result={results}
-              blockTimeEstimates={blockTimeEstimates}
               loading={loading}
               cryptoCurrency={params.cryptoCurrency}
               fiatCurrency={params.fiatCurrency}

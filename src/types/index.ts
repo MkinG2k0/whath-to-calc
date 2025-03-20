@@ -50,10 +50,6 @@ export interface MonthlyForecast {
   roi: number;
 }
 
-export interface BlockTimeEstimate {
-  probability: number;
-  days: number;
-}
 
 export interface CryptoRates {
   [key: string]: {

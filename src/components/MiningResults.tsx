@@ -1,16 +1,14 @@
 import React from "react";
-import { Card, Table, Statistic, Row, Col, Divider } from "antd";
+import { Card, Table, Statistic,  } from "antd";
+import { parsePrice } from '../config'
 import {
   MiningResult,
-  MonthlyForecast,
-  BlockTimeEstimate,
   FiatCurrency,
   CryptoCurrency,
 } from "../types";
 
 interface MiningResultsProps {
   result: MiningResult | null;
-  blockTimeEstimates: BlockTimeEstimate[];
   loading: boolean;
   cryptoCurrency: CryptoCurrency;
   fiatCurrency: FiatCurrency;
@@ -18,7 +16,6 @@ interface MiningResultsProps {
 
 const MiningResults: React.FC<MiningResultsProps> = ({
   result,
-  blockTimeEstimates,
   loading,
   cryptoCurrency,
   fiatCurrency,
@@ -33,45 +30,9 @@ const MiningResults: React.FC<MiningResultsProps> = ({
   };
 
   const formatFiat = (value: number) => {
-    return value.toFixed(2);
+    return parsePrice.format(value);
   };
 
-  // Колонки для таблицы текущих показателей
-  const currentColumns = [
-    {
-      title: "Период",
-      dataIndex: "period",
-      key: "period",
-    },
-    {
-      title: cryptoCurrency,
-      dataIndex: "crypto",
-      key: "crypto",
-      render: (text: number) => formatCrypto(text),
-    },
-    {
-      title: fiatCurrency,
-      dataIndex: "fiat",
-      key: "fiat",
-      render: (text: number) => formatFiat(text),
-    },
-  ];
-
-  // Данные для таблицы текущих показателей
-  const currentData = [
-    {
-      key: "hour",
-      period: "В час",
-      crypto: result.hourlyReward,
-      fiat: result.hourlyReward * (cryptoCurrency === "BTC" ? 63321.8 : 0.15),
-    },
-    {
-      key: "day",
-      period: "В день",
-      crypto: result.dailyReward,
-      fiat: result.dailyReward * (cryptoCurrency === "BTC" ? 63321.8 : 0.15),
-    },
-  ];
 
   // Колонки для таблицы прогноза по месяцам
   const forecastColumns = [
@@ -109,23 +70,6 @@ const MiningResults: React.FC<MiningResultsProps> = ({
       dataIndex: "roi",
       key: "roi",
       render: (text: number) => `${formatFiat(text)} %`,
-    },
-  ];
-
-  // Колонки для таблицы времени нахождения блока
-  const blockTimeColumns = [
-    {
-      title: "Вероятность",
-      dataIndex: "probability",
-      key: "probability",
-      render: (text: number) => (text === -1 ? "Среднее время:" : `${text}%`),
-    },
-    {
-      title: "Время (дней)",
-      dataIndex: "days",
-      key: "days",
-      render: (text: number) =>
-        text.toLocaleString("ru-RU", { maximumFractionDigits: 0 }),
     },
   ];
 
