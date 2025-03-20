@@ -57,7 +57,7 @@ export const useMiningCalculator = () => {
         const dailyProfit = dailyRewardFiat - dailyElectricityCost;
         const monthlyProfit = monthlyRewardFiat - monthlyElectricityCost;
         const yearlyProfit = yearlyRewardFiat - yearlyElectricityCost;
-        // console.log(monthlyElectricityCost);
+
         // Расчет ROI (в процентах)
         let roi = 0;
         if (monthlyProfit > 0) {
@@ -78,12 +78,12 @@ export const useMiningCalculator = () => {
         }
 
         // Прогноз по месяцам
-        const monthlyForecast = calculateMonthlyForecast(
-          params,
-          networkInfo[params.cryptoCurrency].difficulty,
-          cryptoRate,
-          hourlyElectricityCost * 24 * 30
-        );
+        // const monthlyForecast = calculateMonthlyForecast(
+        //   params,
+        //   networkInfo[params.cryptoCurrency].difficulty,
+        //   cryptoRate,
+        //   hourlyElectricityCost * 24 * 30
+        // );
 
         // Расчет вероятности нахождения блока
         const blockTimeEstimates = calculateBlockTimeEstimates(
@@ -112,7 +112,7 @@ export const useMiningCalculator = () => {
           yearlyRewardFiat,
           roi,
           breakEvenDays,
-          monthlyProfitForecast: monthlyForecast,
+          monthlyProfitForecast: [],
         });
 
         setLoading(false);
@@ -144,6 +144,7 @@ const calculateHourlyReward = (
       (difficulty * Math.pow(2, 32))) *
     (1 - poolFee / 100);
 
+  console.log(reward, difficulty, hashRate, blockReward, poolFee);
   return reward;
 };
 

@@ -28,6 +28,7 @@ const MiningForm: React.FC<MiningFormProps> = ({ onParamsChange }) => {
   const [cryptoRates, setCryptoRates] = useState<any>(null);
   const [networkInfo, setNetworkInfo] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const cryptoCurrency = Form.useWatch("cryptoCurrency", form) || "BTC";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,13 +55,14 @@ const MiningForm: React.FC<MiningFormProps> = ({ onParamsChange }) => {
         setNetworkInfo(info);
         isDataFetched = true; // Отмечаем, что данные загружены
 
+        const savedValues = JSON.parse(
+          localStorage.getItem("formValues") || "{}"
+        );
         // Устанавливаем начальные значения формы
         const initialValues = {
           cryptoCurrency: "BTC",
           fiatCurrency: "RUB",
-          networkDifficulty: info.BTC.difficulty,
           hashRate: 100,
-          blockReward: info.BTC.blockReward,
           poolFee: 1,
           farmCost: 35000,
           powerConsumption: 3500,
@@ -68,9 +70,12 @@ const MiningForm: React.FC<MiningFormProps> = ({ onParamsChange }) => {
           miningPeriod: 12,
           includeDepreciation: false,
           depreciationRate: 3.33,
-          startDate: dayjs(),
           difficultyChangePerMonth: 5,
           priceChangePerMonth: 5,
+          ...savedValues,
+          blockReward: info.BTC.blockReward,
+          networkDifficulty: info.BTC.difficulty,
+          startDate: dayjs(),
         };
 
         form.setFieldsValue(initialValues);
@@ -94,6 +99,8 @@ const MiningForm: React.FC<MiningFormProps> = ({ onParamsChange }) => {
   }, [networkInfo]);
 
   const handleFormChange = (values: any) => {
+    localStorage.setItem("formValues", JSON.stringify(values));
+
     // Проверяем, что values и networkInfo не null и не undefined
     if (!values || !networkInfo || !values.cryptoCurrency) {
       console.log("Недостаточно данных для расчета", { values, networkInfo });
@@ -145,47 +152,32 @@ const MiningForm: React.FC<MiningFormProps> = ({ onParamsChange }) => {
     const farmCost = currentValues.farmCost;
     const electricityRate = currentValues.electricityRate;
 
-    // Получаем актуальный курс обмена
-    const exchangeRate = {
-      USDtoRUB: cryptoRates.BTC.RUB / cryptoRates.BTC.USD,
-      RUBtoUSD: cryptoRates.BTC.USD / cryptoRates.BTC.RUB,
-    };
+    // Получаем актуальный курс обмена напрямую
+    const USDtoRUB = cryptoRates.BTC.RUB / cryptoRates.BTC.USD;
+    const RUBtoUSD = 1 / USDtoRUB;
 
     // Конвертируем значения в зависимости от выбранной валюты
     if (prevCurrency === "USD" && value === "RUB") {
       // Конвертация из USD в RUB
       form.setFieldsValue({
-        farmCost: farmCost
-          ? Math.round(farmCost * exchangeRate.USDtoRUB)
-          : farmCost,
+        farmCost: farmCost ? Math.round(farmCost * USDtoRUB) : farmCost,
         electricityRate: electricityRate
-          ? +(electricityRate * exchangeRate.USDtoRUB).toFixed(2)
+          ? +(electricityRate * USDtoRUB).toFixed(2)
           : electricityRate,
+        fiatCurrency: value, // Важно обновить значение валюты
       });
     } else if (prevCurrency === "RUB" && value === "USD") {
       // Конвертация из RUB в USD
       form.setFieldsValue({
-        farmCost: farmCost
-          ? Math.round(farmCost * exchangeRate.RUBtoUSD)
-          : farmCost,
+        farmCost: farmCost ? Math.round(farmCost * RUBtoUSD) : farmCost,
         electricityRate: electricityRate
-          ? +(electricityRate * exchangeRate.RUBtoUSD).toFixed(2)
+          ? +(electricityRate * RUBtoUSD).toFixed(2)
           : electricityRate,
+        fiatCurrency: value, // Важно обновить значение валюты
       });
     }
 
-    // Обновляем суффиксы для полей, зависящих от валюты
-    form.setFields([
-      {
-        name: "farmCost",
-        value: form.getFieldValue("farmCost"),
-      },
-      {
-        name: "electricityRate",
-        value: form.getFieldValue("electricityRate"),
-      },
-    ]);
-
+    // Вызываем обработчик изменения формы для обновления всех зависимых значений
     handleFormChange(form.getFieldsValue());
   };
 
@@ -207,22 +199,10 @@ const MiningForm: React.FC<MiningFormProps> = ({ onParamsChange }) => {
                 <span className="text-white font-bold">₿</span>
               </div>
               <div>
-                <p className="font-medium">Bitcoin (BTC)</p>
+                <p className="font-medium">{cryptoCurrency}</p>
                 <p>
-                  {cryptoRates.BTC.USD.toLocaleString()} USD /{" "}
-                  {cryptoRates.BTC.RUB.toLocaleString()} RUB
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center mr-2">
-                <span className="text-white font-bold">Ð</span>
-              </div>
-              <div>
-                <p className="font-medium">Dogecoin (DOGE)</p>
-                <p>
-                  {cryptoRates.DOGE.USD.toLocaleString()} USD /{" "}
-                  {cryptoRates.DOGE.RUB.toLocaleString()} RUB
+                  {cryptoRates[cryptoCurrency].USD.toLocaleString()} USD /{" "}
+                  {cryptoRates[cryptoCurrency].RUB.toLocaleString()} RUB
                 </p>
               </div>
             </div>
@@ -232,7 +212,7 @@ const MiningForm: React.FC<MiningFormProps> = ({ onParamsChange }) => {
       <Form
         form={form}
         layout="horizontal"
-        onValuesChange={(field, data) => handleFormChange(data)}
+        onValuesChange={(_, data) => handleFormChange(data)}
         labelCol={{ span: 14 }}
         size="small"
         className="text-sm"
